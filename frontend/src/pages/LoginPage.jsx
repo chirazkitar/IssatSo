@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { DEMO_ACCOUNTS } from '../utils/helpers';
 import Spinner from '../components/ui/Spinner';
+import Icon from '../components/icons';
 
 export default function LoginPage() {
   const { login }  = useAuth();
@@ -19,18 +20,12 @@ export default function LoginPage() {
     setError('');
     try {
       await login(email, password);
-      toast('Connexion réussie ! Bienvenue.', 'success');
+      toast('Connexion réussie', 'success');
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }
-
-  function fillDemo(account) {
-    setEmail(account.email);
-    setPassword(account.pass);
-    setError('');
   }
 
   return (
@@ -40,49 +35,68 @@ export default function LoginPage() {
       <div className="login-orb orb3" />
 
       <div className="login-card">
-        <div className="login-logo">🎓</div>
+        {/* Logo */}
+        <div className="login-logo-wrap">
+          <Icon name="mortarboard" size={26} />
+        </div>
+
         <div className="login-title">
           <h1>UniPlatform</h1>
           <p>Plateforme de Gestion Académique</p>
         </div>
 
-        {error && <div className="alert alert-error">⚠️ {error}</div>}
+        {error && (
+          <div className="alert alert-error">
+            <Icon name="exclamationTriangle" size={14} />
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Adresse Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="votre@email.dz"
-              required
-              autoFocus
-            />
+            <div className="input-wrap">
+              <span className="input-icon">
+                <Icon name="envelope" size={14} />
+              </span>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="votre@email.dz"
+                required
+                autoFocus
+                style={{ paddingLeft: 36 }}
+              />
+            </div>
           </div>
 
           <div className="form-group">
             <label>Mot de passe</label>
-            <div style={{ position: 'relative' }}>
+            <div className="input-wrap">
+              <span className="input-icon">
+                <Icon name="lock" size={14} />
+              </span>
               <input
                 type={showPass ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                style={{ paddingRight: 44 }}
+                style={{ paddingLeft: 36, paddingRight: 40 }}
               />
               <button
                 type="button"
                 onClick={() => setShowPass((s) => !s)}
                 style={{
-                  position: 'absolute', right: 12, top: '50%',
+                  position: 'absolute', right: 10, top: '50%',
                   transform: 'translateY(-50%)',
                   background: 'none', border: 'none',
-                  color: 'var(--text3)', cursor: 'pointer', fontSize: 15,
+                  color: 'var(--text3)', cursor: 'pointer',
+                  padding: '4px', display: 'flex',
                 }}
               >
-                {showPass ? '🙈' : '👁️'}
+                <Icon name={showPass ? 'eyeSlash' : 'eye'} size={15} />
               </button>
             </div>
           </div>
@@ -90,24 +104,26 @@ export default function LoginPage() {
           <button
             type="submit"
             className="btn btn-primary btn-lg"
-            style={{ width: '100%', marginTop: 6 }}
+            style={{ width: '100%', marginTop: 6, justifyContent: 'center' }}
             disabled={loading}
           >
             {loading ? (
               <><Spinner size={16} /> Connexion...</>
             ) : (
-              '🚀 Se connecter'
+              'Se connecter'
             )}
           </button>
         </form>
 
         {/* Demo accounts */}
         <div className="demo-box">
-          <div className="demo-box-title">
-            ⚡ Comptes de démonstration — cliquer pour remplir
-          </div>
+          <div className="demo-box-title">Comptes de démonstration</div>
           {DEMO_ACCOUNTS.map((d) => (
-            <div key={d.email} className="demo-row" onClick={() => fillDemo(d)}>
+            <div
+              key={d.email}
+              className="demo-row"
+              onClick={() => { setEmail(d.email); setPassword(d.pass); setError(''); }}
+            >
               <span className="demo-role">{d.role}</span>
               <span className="demo-creds">{d.email}</span>
             </div>

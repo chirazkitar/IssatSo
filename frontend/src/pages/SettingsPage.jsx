@@ -5,11 +5,12 @@ import { useToast } from '../context/ToastContext';
 import { fmtDate, getRoleLabel } from '../utils/helpers';
 import Toggle from '../components/ui/Toggle';
 import PasswordModal from '../components/ui/PasswordModal';
+import Icon from '../components/icons';
 
 const LANGUAGES = [
-  { value: 'fr', label: '🇩🇿 Français' },
-  { value: 'ar', label: '🇩🇿 العربية'  },
-  { value: 'en', label: '🇬🇧 English'   },
+  { value: 'fr', label: 'Français (DZ)' },
+  { value: 'ar', label: 'العربية' },
+  { value: 'en', label: 'English' },
 ];
 
 export default function SettingsPage() {
@@ -27,9 +28,9 @@ export default function SettingsPage() {
     toast('Langue sauvegardée', 'success');
   }
 
-  function handleNotif(name, setter, current) {
+  function handleNotif(setter, current, name) {
     setter(!current);
-    toast(`Notifications ${!current ? 'activées' : 'désactivées'}`, 'info');
+    toast(`${name} ${!current ? 'activées' : 'désactivées'}`, 'info');
   }
 
   return (
@@ -43,7 +44,10 @@ export default function SettingsPage() {
         {/* Appearance */}
         <div className="card fade-up-1">
           <div className="card-header">
-            <span className="card-title">🎨 Apparence</span>
+            <span className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Icon name="sun" size={15} style={{ color: 'var(--gold)' }} />
+              Apparence
+            </span>
           </div>
           <div className="card-body">
             <div className="settings-row">
@@ -54,10 +58,9 @@ export default function SettingsPage() {
               <Toggle
                 on={theme === 'light'}
                 onToggle={toggle}
-                label={theme === 'dark' ? '🌙 Sombre' : '☀️ Clair'}
+                label={theme === 'dark' ? 'Sombre' : 'Clair'}
               />
             </div>
-
             <div className="settings-row">
               <div className="settings-info">
                 <label>Langue de l'interface</label>
@@ -79,22 +82,15 @@ export default function SettingsPage() {
         {/* Notifications */}
         <div className="card fade-up-2">
           <div className="card-header">
-            <span className="card-title">🔔 Notifications</span>
+            <span className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Icon name="bell" size={15} style={{ color: 'var(--accent2)' }} />
+              Notifications
+            </span>
           </div>
           <div className="card-body">
             {[
-              {
-                label:  'Notifications par email',
-                desc:   'Recevoir les mises à jour sur votre email',
-                state:  notifEmail,
-                setter: setNotifEmail,
-              },
-              {
-                label:  'Alertes de nouvelles notes',
-                desc:   'Être notifié quand vos notes sont publiées',
-                state:  notifGrades,
-                setter: setNotifGrades,
-              },
+              { label: 'Notifications par email', desc: 'Recevoir les mises à jour sur votre email', state: notifEmail, setter: setNotifEmail, name: 'Notifications email' },
+              { label: 'Alertes de nouvelles notes', desc: 'Être notifié quand vos notes sont publiées', state: notifGrades, setter: setNotifGrades, name: 'Alertes notes' },
             ].map((n) => (
               <div key={n.label} className="settings-row">
                 <div className="settings-info">
@@ -103,7 +99,7 @@ export default function SettingsPage() {
                 </div>
                 <Toggle
                   on={n.state}
-                  onToggle={() => handleNotif(n.label, n.setter, n.state)}
+                  onToggle={() => handleNotif(n.setter, n.state, n.name)}
                 />
               </div>
             ))}
@@ -113,7 +109,10 @@ export default function SettingsPage() {
         {/* Security */}
         <div className="card fade-up-3">
           <div className="card-header">
-            <span className="card-title">🔐 Sécurité</span>
+            <span className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Icon name="lockFill" size={15} style={{ color: 'var(--red)' }} />
+              Sécurité
+            </span>
           </div>
           <div className="card-body">
             <div className="settings-row">
@@ -122,7 +121,7 @@ export default function SettingsPage() {
                 <p>Modifier votre mot de passe de connexion</p>
               </div>
               <button className="btn btn-ghost" onClick={() => setShowPwd(true)}>
-                🔑 Modifier
+                <Icon name="lock" size={14} /> Modifier
               </button>
             </div>
             <div className="settings-row">
@@ -131,7 +130,7 @@ export default function SettingsPage() {
                 <p>Connecté en tant que {getRoleLabel(user.role)}</p>
               </div>
               <button className="btn btn-danger" onClick={logout}>
-                ⎋ Déconnecter
+                <Icon name="boxArrowRight" size={14} /> Déconnecter
               </button>
             </div>
           </div>
@@ -140,15 +139,18 @@ export default function SettingsPage() {
         {/* About */}
         <div className="card fade-up-4">
           <div className="card-header">
-            <span className="card-title">ℹ️ À propos</span>
+            <span className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Icon name="info" size={15} style={{ color: 'var(--teal)' }} />
+              À propos
+            </span>
           </div>
           <div className="card-body">
             {[
-              ['Application',    'UniPlatform v2.0'],
-              ['Technologie',    'React + Node.js + PostgreSQL'],
-              ['Votre rôle',     getRoleLabel(user.role)],
-              ['Email',          user.email],
-              ['Membre depuis',  fmtDate(user.created_at)],
+              ['Application',   'UniPlatform v2.0'],
+              ['Technologie',   'React · Node.js · PostgreSQL'],
+              ['Votre rôle',    getRoleLabel(user.role)],
+              ['Email',         user.email],
+              ['Membre depuis', fmtDate(user.created_at)],
             ].map(([label, value]) => (
               <div key={label} className="settings-row">
                 <span style={{ fontSize: 13, color: 'var(--text2)' }}>{label}</span>

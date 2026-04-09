@@ -1,54 +1,39 @@
 import { useTheme } from '../../context/ThemeContext';
-import { getRoleCls, getRoleLabel, PAGE_TITLES } from '../../utils/helpers';
+import { getRoleLabel, PAGE_TITLES } from '../../utils/helpers';
 import Avatar from '../ui/Avatar';
 import { RoleBadge } from '../ui/Badge';
 import NotifBell from './NotifBell';
+import Icon from '../icons';
 
-export default function Topbar({ user, page, onMenuToggle }) {
+export default function Topbar({ user, page, onMenuToggle, setPage }) {
   const { theme, toggle } = useTheme();
   const title = PAGE_TITLES[page] || page;
 
   return (
     <header className="topbar">
-      {/* Left */}
       <div className="topbar-left">
-        <button className="menu-toggle" onClick={onMenuToggle}>
-          ☰
+        <button className="menu-btn" onClick={onMenuToggle} aria-label="Menu">
+          <Icon name="menu" size={18} />
         </button>
         <div>
           <div className="topbar-title">{title}</div>
-          <div className="topbar-breadcrumb">
-            UniPlatform › {title}
-          </div>
+          <div className="topbar-breadcrumb">UniPlatform › {title}</div>
         </div>
       </div>
 
-      {/* Right */}
       <div className="topbar-right">
-        {/* Theme toggle */}
-        <div
+        <button
           className="icon-btn"
           onClick={toggle}
           title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+          style={{ background: 'transparent', border: '1px solid var(--border)' }}
         >
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </div>
+          <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} />
+        </button>
 
-        {/* Notification bell */}
-        <NotifBell />
+        <NotifBell onOpenMessaging={() => setPage && setPage('messaging')} />
 
-        {/* User pill */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '5px 12px',
-            background: 'var(--card)',
-            borderRadius: 'var(--radius2)',
-            border: '1px solid var(--border)',
-          }}
-        >
+        <div className="user-pill">
           <Avatar firstName={user.first_name} lastName={user.last_name} size="sm" />
           <RoleBadge role={user.role} />
         </div>

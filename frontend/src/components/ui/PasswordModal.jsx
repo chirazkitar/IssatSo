@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import Modal from './Modal';
 import Spinner from './Spinner';
-import { usersAPI } from '../../api/apifetch';
+import Icon from '../icons';
+import { usersAPI } from '../../api';
 import { useToast } from '../../context/ToastContext';
 
 export default function PasswordModal({ onClose }) {
@@ -26,7 +27,7 @@ export default function PasswordModal({ onClose }) {
         current_password: form.current,
         new_password:     form.newpwd,
       });
-      toast('Mot de passe modifié avec succès !', 'success');
+      toast('Mot de passe modifié avec succès', 'success');
       onClose();
     } catch (err) {
       toast(err.message, 'error');
@@ -43,7 +44,7 @@ export default function PasswordModal({ onClose }) {
 
   return (
     <Modal
-      title="🔑 Changer le mot de passe"
+      title="Changer le mot de passe"
       onClose={onClose}
       footer={
         <>
@@ -54,7 +55,7 @@ export default function PasswordModal({ onClose }) {
             {loading ? (
               <><Spinner size={14} /> Enregistrement...</>
             ) : (
-              '💾 Modifier'
+              <><Icon name="save" size={14} /> Modifier</>
             )}
           </button>
         </>
@@ -63,12 +64,18 @@ export default function PasswordModal({ onClose }) {
       {fields.map(([label, key]) => (
         <div key={key} className="form-group">
           <label>{label}</label>
-          <input
-            type="password"
-            value={form[key]}
-            onChange={(e) => set(key, e.target.value)}
-            placeholder="••••••••"
-          />
+          <div className="input-wrap">
+            <span className="input-icon">
+              <Icon name="lock" size={14} />
+            </span>
+            <input
+              type="password"
+              value={form[key]}
+              onChange={(e) => set(key, e.target.value)}
+              placeholder="••••••••"
+              style={{ paddingLeft: 36 }}
+            />
+          </div>
         </div>
       ))}
     </Modal>

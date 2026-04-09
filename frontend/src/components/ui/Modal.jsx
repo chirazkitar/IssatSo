@@ -1,3 +1,5 @@
+import Icon from '../icons';
+
 export default function Modal({ title, onClose, children, footer }) {
   return (
     <div
@@ -7,8 +9,8 @@ export default function Modal({ title, onClose, children, footer }) {
       <div className="modal">
         <div className="modal-header">
           <h3>{title}</h3>
-          <button className="modal-close" onClick={onClose}>
-            ✕
+          <button className="modal-close" onClick={onClose} aria-label="Fermer">
+            <Icon name="x" size={18} />
           </button>
         </div>
         <div className="modal-body">{children}</div>
