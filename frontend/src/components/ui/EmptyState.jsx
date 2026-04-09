@@ -1,4 +1,4 @@
-export default function EmptyState({ icon = '📭', title = 'Aucune donnée', sub = '' }) {
+export default function EmptyState({ icon = '', title = 'Aucune donnée', sub = '' }) {
   return (
     <div className="empty-state">
       <div className="empty-icon">{icon}</div>

@@ -18,7 +18,7 @@ function NotFound() {
   return (
     <div className="page">
       <div className="empty-state">
-        <div className="empty-icon">🚧</div>
+        <div className="empty-icon"></div>
         <div className="empty-title">Page en cours de développement</div>
         <div className="empty-sub">Cette section sera bientôt disponible.</div>
       </div>

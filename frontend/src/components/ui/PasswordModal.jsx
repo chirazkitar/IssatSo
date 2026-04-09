@@ -43,7 +43,7 @@ export default function PasswordModal({ onClose }) {
 
   return (
     <Modal
-      title="🔑 Changer le mot de passe"
+      title=" Changer le mot de passe"
       onClose={onClose}
       footer={
         <>
@@ -54,7 +54,7 @@ export default function PasswordModal({ onClose }) {
             {loading ? (
               <><Spinner size={14} /> Enregistrement...</>
             ) : (
-              '💾 Modifier'
+              ' Modifier'
             )}
           </button>
         </>

@@ -3,12 +3,14 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import AppShell  from './components/layout/AppShell';
 import AppRouter from './router/AppRouter';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import Loader    from './components/ui/Loader';
 import { ThemeProvider } from './context/ThemeContext';
 
 function InnerApp() {
   const { user, loading, logout } = useAuth();
   const [page, setPage] = useState('dashboard');
+  const [authView, setAuthView] = useState('login');
 
 
   if (loading) {
@@ -27,7 +29,12 @@ function InnerApp() {
   }
 
   
-  if (!user) return <LoginPage />;
+  if (!user) {
+    if (authView === 'login') {
+      return <LoginPage onGoToRegister={() => setAuthView('register')} />;
+    }
+    return <RegisterPage onGoToLogin={() => setAuthView('login')} />;
+  }
 
 
   return (

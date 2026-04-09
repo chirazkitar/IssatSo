@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useState } from 'react';
 const ToastContext = createContext(null);
 let toastId = 0;
 
-const ICONS = { success: '✅', error: '❌', info: 'ℹ️', warn: '⚠️' };
+const ICONS = { success: '', error: '', info: '️', warn: '️' };
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);

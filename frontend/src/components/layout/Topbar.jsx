@@ -31,7 +31,7 @@ export default function Topbar({ user, page, onMenuToggle }) {
           onClick={toggle}
           title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
         >
-          {theme === 'dark' ? '☀️' : '🌙'}
+          {theme === 'dark' ? '🌞' : '🌙'}
         </div>
 
         {/* Notification bell */}

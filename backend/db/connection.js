@@ -8,7 +8,7 @@ const pool = new Pool({
   port: process.env.DB_PORT || 5432,
   database: process.env.DB_NAME || 'IssatSo',
   user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'chiraz123',
+  password: process.env.DB_PASSWORD || 'system',
 });
 
 async function initializeDB() {
@@ -113,7 +113,42 @@ async function initializeDB() {
         [teacherId, chefId]
       );
 
-      console.log('Default users created');
+      // Seed Internships
+      const internCheck = await client.query('SELECT COUNT(*) FROM internships');
+      if (parseInt(internCheck.rows[0].count) === 0) {
+        await client.query(`
+          INSERT INTO internships (title, company, description, location, duration) VALUES
+          ('Stage d''été Développeur Web', 'Tech Innov Sousse', 'Participation au développement d''une application interne en React et Node.js.', 'Sousse, Tunisie', '2 mois'),
+          ('Stage PFE - IA & Data Science', 'Global Data', 'Analyse de données et modélisation prédictive avec Python.', 'Tunis, Tunisie', '6 mois'),
+          ('Stage Cybersécurité', 'CyberSec Africa', 'Audit de sécurité des applications web.', 'Sfax, Tunisie', '3 mois')
+        `);
+      }
+
+      // Seed Course Materials
+      const matCheck = await client.query('SELECT COUNT(*) FROM course_materials');
+      if (parseInt(matCheck.rows[0].count) === 0) {
+        await client.query(`
+          INSERT INTO course_materials (module_id, title, file_url, type) VALUES
+          (1, 'Chapitre 1: Introduction aux Algorithmes', '/materials/algo_ch1.pdf', 'PDF'),
+          (1, 'Série TD 1 - Algo', '/materials/algo_td1.pdf', 'PDF'),
+          (2, 'Cours C - Les pointeurs', '/materials/c_pointeurs.pdf', 'PDF'),
+          (3, 'Modèle Entité-Association', '/materials/bdd_ch1.pdf', 'PDF')
+        `);
+      }
+
+      // Seed Schedules
+      const schedCheck = await client.query('SELECT COUNT(*) FROM schedules');
+      if (parseInt(schedCheck.rows[0].count) === 0) {
+        await client.query(`
+          INSERT INTO schedules (program_id, day_of_week, start_time, end_time, module_id, teacher_id, room) VALUES
+          (1, 'Lundi', '08:30', '10:00', 1, $1, 'Amphi A'),
+          (1, 'Lundi', '10:15', '11:45', 2, $1, 'Salle 102'),
+          (1, 'Mardi', '08:30', '11:45', 3, $2, 'Labo 1'),
+          (1, 'Mercredi', '14:00', '17:00', 4, $2, 'Salle 204')
+        `, [chefId, teacherId]);
+      }
+
+      console.log('Default users created and data seeded');
     }
   } catch (err) {
     console.error('DB init error:', err.message);

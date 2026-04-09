@@ -4,7 +4,7 @@ import { Chip } from '../ui/Badge';
 const INITIAL_NOTIFS = [
   { id: 1, icon: '📊', text: 'Nouvelles notes disponibles en Algorithmique', time: 'Il y a 2h',  unread: true  },
   { id: 2, icon: '📅', text: 'Rappel : Examen de BDD le 15 mars',            time: 'Il y a 1j',  unread: true  },
-  { id: 3, icon: '✅', text: 'Votre profil a été mis à jour',                 time: 'Il y a 3j',  unread: false },
+  { id: 3, icon: '👤', text: 'Votre profil a été mis à jour',                 time: 'Il y a 3j',  unread: false },
 ];
 
 export default function NotifBell() {

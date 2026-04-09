@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   last_name VARCHAR(100) NOT NULL,
   phone VARCHAR(20),
   avatar_url TEXT,
+  status VARCHAR(20) DEFAULT 'approved',
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -138,3 +139,36 @@ INSERT INTO modules (name, code, coefficient, semester, program_id) VALUES
   ('Analyse', 'ANA', 3.0, 1, 3),
   ('Algèbre', 'ALG', 3.0, 1, 3)
 ON CONFLICT DO NOTHING;
+
+-- Internships
+CREATE TABLE IF NOT EXISTS internships (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  company VARCHAR(255) NOT NULL,
+  description TEXT,
+  location VARCHAR(255),
+  duration VARCHAR(100),
+  posted_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Course Materials
+CREATE TABLE IF NOT EXISTS course_materials (
+  id SERIAL PRIMARY KEY,
+  module_id INTEGER REFERENCES modules(id),
+  title VARCHAR(255) NOT NULL,
+  file_url VARCHAR(255),
+  type VARCHAR(50),
+  uploaded_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Schedule (Emploi du temps)
+CREATE TABLE IF NOT EXISTS schedules (
+  id SERIAL PRIMARY KEY,
+  program_id INTEGER REFERENCES programs(id),
+  day_of_week VARCHAR(20) NOT NULL,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  module_id INTEGER REFERENCES modules(id),
+  teacher_id INTEGER REFERENCES users(id),
+  room VARCHAR(50)
+);

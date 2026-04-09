@@ -31,8 +31,9 @@ export async function apiFetch(endpoint, options = {}) {
 
 // ─── AUTH ────────────────────────────────────────────────────────────────────
 export const authAPI = {
-  login : (email, password) => apiFetch('/auth/login', { method: 'POST', body: { email, password } }),
-  me    : ()                => apiFetch('/auth/me'),
+  login    : (email, password) => apiFetch('/auth/login', { method: 'POST', body: { email, password } }),
+  register : (body)            => apiFetch('/auth/register', { method: 'POST', body }),
+  me       : ()                => apiFetch('/auth/me'),
 };
 
 // ─── USERS ───────────────────────────────────────────────────────────────────
@@ -44,6 +45,7 @@ export const usersAPI = {
   teachers      : ()         => apiFetch('/users/teachers'),
   programs      : ()         => apiFetch('/users/programs'),
   departments   : ()         => apiFetch('/users/departments'),
+  approve       : (id)       => apiFetch(`/users/${id}/approve`, { method: 'PUT' }),
 };
 
 // ─── GRADES ──────────────────────────────────────────────────────────────────

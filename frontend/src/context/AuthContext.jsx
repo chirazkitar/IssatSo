@@ -23,6 +23,14 @@ export function AuthProvider({ children }) {
     return data.user;
   }, []);
 
+  const register = useCallback(async (userData) => {
+    const data = await authAPI.register(userData);
+    setToken(data.token);
+    setUser(data.user);
+    return data.user;
+  }, []);
+
+
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
@@ -33,7 +41,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
