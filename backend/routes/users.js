@@ -62,7 +62,7 @@ router.get('/', authenticate, authorize('admin', 'chef_departement'), async (req
   const { role } = req.query;
   try {
     let query = `
-      SELECT u.id, u.email, u.role, u.first_name, u.last_name, u.phone, u.created_at,
+      SELECT u.id, u.email, u.role, u.first_name, u.last_name, u.phone, u.created_at, u.status,
         sp.student_number, sp.program_id, p.name as program_name,
         tp.employee_number, tp.department_id, d.name as department_name
       FROM users u
@@ -127,7 +127,7 @@ router.get('/teachers', authenticate, authorize('chef_departement', 'admin'), as
 });
 
 
-router.get('/programs', authenticate, async (req, res) => {
+router.get('/programs', async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT p.*, d.name as department_name FROM programs p
@@ -140,7 +140,7 @@ router.get('/programs', authenticate, async (req, res) => {
 });
 
 
-router.get('/departments', authenticate, async (req, res) => {
+router.get('/departments', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM departments ORDER BY name');
     res.json(result.rows);
@@ -164,6 +164,19 @@ router.post('/change-password', authenticate, async (req, res) => {
     res.json({ message: 'Mot de passe modifié avec succès' });
   } catch (err) {
     res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+router.put('/:id/approve', authenticate, authorize('admin'), async (req, res) => {
+  try {
+    const result = await pool.query(
+      "UPDATE users SET status = 'approved', updated_at = NOW() WHERE id = $1 RETURNING id",
+      [req.params.id]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'User not found' });
+    res.json({ message: 'User approved successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

@@ -4,11 +4,13 @@ import { MessagingProvider } from './context/MessagingContext';
 import AppShell  from './components/layout/AppShell';
 import AppRouter from './router/AppRouter';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import Loader    from './components/ui/Loader';
 
 function InnerApp() {
   const { user, loading, logout } = useAuth();
   const [page, setPage] = useState('dashboard');
+  const [authView, setAuthView] = useState('login');
 
   if (loading) {
     return (
@@ -17,9 +19,12 @@ function InnerApp() {
       </div>
     );
   }
-
-  if (!user) return <LoginPage />;
-
+  if (!user) {
+    if (authView === 'login') {
+      return <LoginPage onGoToRegister={() => setAuthView('register')} />;
+    }
+    return <RegisterPage onGoToLogin={() => setAuthView('login')} />;
+  }
   return (
     <MessagingProvider>
       <AppShell user={user} page={page} setPage={setPage} onLogout={logout}>

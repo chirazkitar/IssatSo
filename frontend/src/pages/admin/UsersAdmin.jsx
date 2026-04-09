@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { usersAPI } from '../../api';
+import { usersAPI } from '../../api/apifetch';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import { fmtDate } from '../../utils/helpers';
 import { RoleBadge, Chip } from '../../components/ui/Badge';
 import Avatar from '../../components/ui/Avatar';
@@ -11,6 +12,7 @@ import Icon from '../../components/icons';
 export default function UsersAdmin() {
   const { user: currentUser } = useAuth();
   const isChef = currentUser?.role === 'chef_departement';
+  const toast = useToast();
   const [users,        setUsers]        = useState([]);
   const [loading,      setLoading]      = useState(true);
   const [filter,       setFilter]       = useState('all');
@@ -20,6 +22,18 @@ export default function UsersAdmin() {
   useEffect(() => {
     usersAPI.list(isChef ? 'teacher' : undefined).then(setUsers).catch(console.error).finally(() => setLoading(false));
   }, [isChef]);
+
+  async function handleApprove(id) {
+    if (!confirm('Voulez-vous approuver ce compte ?')) return;
+    try {
+      await usersAPI.approve(id);
+      setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, status: 'approved' } : u)));
+      if (selectedUser?.id === id) setSelectedUser((prev) => ({ ...prev, status: 'approved' }));
+      toast('Compte approuvé avec succès', 'success');
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  }
 
   const filtered = useMemo(() =>
     users.filter((u) => {
@@ -59,7 +73,7 @@ export default function UsersAdmin() {
         <div className="table-wrap fade-up">
           <table>
             <thead>
-              <tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Identifiant</th><th>Programme / Dép.</th><th>Inscription</th></tr>
+              <tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Identifiant</th><th>Programme / Dép.</th><th>Inscription</th></tr>
             </thead>
             <tbody>
               {filtered.map((u) => (
@@ -75,6 +89,7 @@ export default function UsersAdmin() {
                   </td>
                   <td style={{ color:'var(--text3)', fontSize:12 }}>{u.email}</td>
                   <td><RoleBadge role={u.role} /></td>
+                  <td style={{ fontSize:12 }}>{u.status === 'pending' ? <span style={{ color: '#d97706', fontWeight: 600 }}>En attente</span> : <span style={{ color: '#16a34a' }}>Approuvé</span>}</td>
                   <td><Chip>{u.student_number || u.employee_number || '—'}</Chip></td>
                   <td style={{ fontSize:12, color:'var(--text2)' }}>{u.program_name || u.department_name || '—'}</td>
                   <td style={{ fontSize:12, color:'var(--text3)' }}>{fmtDate(u.created_at)}</td>
@@ -87,7 +102,14 @@ export default function UsersAdmin() {
 
       {selectedUser && (
         <Modal title="Détails Utilisateur" onClose={() => setSelectedUser(null)}
-          footer={<button className="btn btn-ghost" onClick={() => setSelectedUser(null)}>Fermer</button>}>
+          footer={
+            <div style={{ display: 'flex', gap: 10 }}>
+              {selectedUser.status === 'pending' && !isChef && (
+                <button className="btn btn-primary" onClick={() => handleApprove(selectedUser.id)}>Approuver le compte</button>
+              )}
+              <button className="btn btn-ghost" onClick={() => setSelectedUser(null)}>Fermer</button>
+            </div>
+          }>
           <div style={{ display:'flex', gap:16, alignItems:'center', marginBottom:20 }}>
             <Avatar firstName={selectedUser.first_name} lastName={selectedUser.last_name} size="lg" />
             <div>

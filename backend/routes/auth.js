@@ -35,6 +35,10 @@ router.post('/login', async (req, res) => {
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
+    if (user.status === 'pending') {
+      return res.status(403).json({ error: 'Votre compte est en attente d\'approbation par l\'administration.' });
+    }
+
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
@@ -69,6 +73,64 @@ router.get('/me', authenticate, async (req, res) => {
     res.json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+router.post('/register', async (req, res) => {
+  const { 
+    email, password, role, first_name, last_name, phone,
+    student_number, program_id, date_of_birth, place_of_birth, enrollment_year, bac_year, bac_mention, address,
+    employee_number, department_id, specialization, hire_date
+  } = req.body;
+
+  if (!email || !password || !first_name || !last_name || !role) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const emailCheck = await client.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (emailCheck.rows.length > 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Cet email est déjà utilisé' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+
+    const userRes = await client.query(
+      \`INSERT INTO users (email, password_hash, role, first_name, last_name, phone, status) 
+       VALUES ($1, $2, $3, $4, $5, $6, 'pending') RETURNING id\`,
+      [email, hash, role, first_name, last_name, phone]
+    );
+    const userId = userRes.rows[0].id;
+
+    if (role === 'student') {
+      const generatedNum = student_number || \`2024/\${Math.random().toString(36).substr(2, 4).toUpperCase()}\`;
+      await client.query(
+        \`INSERT INTO student_profiles (user_id, student_number, program_id, date_of_birth, place_of_birth, enrollment_year, bac_year, bac_mention, address)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\`,
+        [userId, generatedNum, program_id || null, date_of_birth || null, place_of_birth || null, enrollment_year || null, bac_year || null, bac_mention || null, address || null]
+      );
+    } else if (role === 'teacher' || role === 'chef_departement') {
+      const generatedNum = employee_number || \`TEACH-\${Math.random().toString().substr(2, 4)}\`;
+      await client.query(
+        \`INSERT INTO teacher_profiles (user_id, employee_number, department_id, specialization, hire_date)
+         VALUES ($1, $2, $3, $4, $5)\`,
+        [userId, generatedNum, department_id || null, specialization || null, hire_date || null]
+      );
+    }
+
+    await client.query('COMMIT');
+    res.status(201).json({ message: 'Compte créé avec succès, en attente d\\'approbation.' });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error(err);
+    res.status(500).json({ error: 'Server error during registration' });
+  } finally {
+    client.release();
   }
 });
 

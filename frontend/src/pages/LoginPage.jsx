@@ -5,7 +5,7 @@ import { DEMO_ACCOUNTS } from '../utils/helpers';
 import Spinner from '../components/ui/Spinner';
 import Icon from '../components/icons';
 
-export default function LoginPage() {
+export default function LoginPage({ onGoToRegister }) {
   const { login }  = useAuth();
   const toast       = useToast();
   const [email,    setEmail]    = useState('');
@@ -114,6 +114,20 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        <div style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text2)' }}>
+          Pas encore de compte ?{' '}
+          <button 
+            type="button" 
+            onClick={onGoToRegister}
+            style={{ 
+              background: 'none', border: 'none', color: 'var(--primary)', 
+              cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline'
+            }}
+          >
+            S'inscrire
+          </button>
+        </div>
 
         {/* Demo accounts */}
         <div className="demo-box">
