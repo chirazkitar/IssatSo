@@ -1,15 +1,10 @@
-// ─── API BASE URL ───────────────────────────────────────────────────────────
-// When using Create React App "proxy" in package.json the base can be empty,
-// but we keep it explicit here so it also works without the proxy.
 export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-// ─── TOKEN HELPERS ──────────────────────────────────────────────────────────
 export const getToken  = ()  => localStorage.getItem('uni_token');
 export const setToken  = (t) => t
   ? localStorage.setItem('uni_token', t)
   : localStorage.removeItem('uni_token');
 
-// ─── GENERIC FETCH WRAPPER ──────────────────────────────────────────────────
 export async function apiFetch(endpoint, options = {}) {
   const token = getToken();
   const res = await fetch(API_BASE + endpoint, {
@@ -29,13 +24,11 @@ export async function apiFetch(endpoint, options = {}) {
   return res.json();
 }
 
-// ─── AUTH ────────────────────────────────────────────────────────────────────
 export const authAPI = {
   login : (email, password) => apiFetch('/auth/login', { method: 'POST', body: { email, password } }),
   me    : ()                => apiFetch('/auth/me'),
 };
 
-// ─── USERS ───────────────────────────────────────────────────────────────────
 export const usersAPI = {
   list          : (role)     => apiFetch(`/users${role ? `?role=${role}` : ''}`),
   create        : (data)     => apiFetch('/users', { method: 'POST', body: data }),
@@ -46,7 +39,6 @@ export const usersAPI = {
   departments   : ()         => apiFetch('/users/departments'),
 };
 
-// ─── GRADES ──────────────────────────────────────────────────────────────────
 export const gradesAPI = {
   myGrades        : ()     => apiFetch('/grades/my'),
   dossier         : ()     => apiFetch('/grades/dossier'),
@@ -55,13 +47,34 @@ export const gradesAPI = {
   transcriptUrl   : ()     => `${API_BASE}/grades/transcript`,
 };
 
-// ─── MODULES ─────────────────────────────────────────────────────────────────
 export const modulesAPI = {
   list   : ()     => apiFetch('/modules'),
   assign : (body) => apiFetch('/modules/assign', { method: 'POST', body }),
 };
 
-// ─── STATS ───────────────────────────────────────────────────────────────────
 export const statsAPI = {
   global: () => apiFetch('/stats'),
+};
+
+export const messagesAPI = {
+  inbox       : ()     => apiFetch('/messages/inbox'),
+  sent        : ()     => apiFetch('/messages/sent'),
+  unreadCount : ()     => apiFetch('/messages/unread-count'),
+  markRead    : (id)   => apiFetch(`/messages/${id}/read`, { method: 'POST' }),
+  send: (formData) => {
+  const token = getToken();
+  return fetch(API_BASE + '/messages/send', {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: formData,        // FormData — ne pas JSON.stringify, pas de Content-Type
+  }).then(async res => {
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Erreur réseau' }));
+      throw new Error(err.error || 'Erreur');
+    }
+    return res.json();
+  });
+},
+  attachmentUrl: (id) => `${API_BASE}/messages/attachment/${id}`,
+  recipients  : ()     => apiFetch('/messages/recipients'),
 };

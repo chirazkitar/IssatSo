@@ -138,3 +138,32 @@ INSERT INTO modules (name, code, coefficient, semester, program_id) VALUES
   ('Analyse', 'ANA', 3.0, 1, 3),
   ('Algèbre', 'ALG', 3.0, 1, 3)
 ON CONFLICT DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS messages (
+  id           SERIAL PRIMARY KEY,
+  sender_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  subject      VARCHAR(255) NOT NULL,
+  body         TEXT NOT NULL,
+  scope        VARCHAR(20) NOT NULL DEFAULT 'direct',
+  recipient_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  program_id   INTEGER REFERENCES programs(id) ON DELETE SET NULL,
+  created_at   TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS message_reads (
+  id         SERIAL PRIMARY KEY,
+  message_id INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  read_at    TIMESTAMP DEFAULT NOW(),
+  UNIQUE(message_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS message_attachments (
+  id           SERIAL PRIMARY KEY,
+  message_id   INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+  filename     VARCHAR(255) NOT NULL,  
+  stored_name  VARCHAR(255) NOT NULL,   
+  mime_type    VARCHAR(100),
+  size_bytes   INTEGER,
+  uploaded_at  TIMESTAMP DEFAULT NOW()
+);

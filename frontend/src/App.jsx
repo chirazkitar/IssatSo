@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { MessagingProvider } from './context/MessagingContext';
 import AppShell  from './components/layout/AppShell';
 import AppRouter from './router/AppRouter';
 import LoginPage from './pages/LoginPage';
@@ -20,9 +21,11 @@ function InnerApp() {
   if (!user) return <LoginPage />;
 
   return (
-    <AppShell user={user} page={page} setPage={setPage} onLogout={logout}>
-      <AppRouter page={page} setPage={setPage} />
-    </AppShell>
+    <MessagingProvider>
+      <AppShell user={user} page={page} setPage={setPage} onLogout={logout}>
+        <AppRouter page={page} setPage={setPage} />
+      </AppShell>
+    </MessagingProvider>
   );
 }
 

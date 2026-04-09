@@ -11,6 +11,7 @@ import CreateUser       from '../pages/admin/CreateUser';
 import ModulesPage      from '../pages/chef/ModulesPage';
 import ProfilePage      from '../pages/ProfilePage';
 import SettingsPage     from '../pages/SettingsPage';
+import MessagingPage from '../pages/messaging/MessagingPage';
 
 function NotFound() {
   return (
@@ -29,6 +30,7 @@ export default function AppRouter({ page, setPage }) {
   const role = user?.role;
   if (page === 'profile')  return <ProfilePage />;
   if (page === 'settings') return <SettingsPage />;
+  if (page === 'messaging') return <MessagingPage />;
   if (page === 'dashboard') {
     if (role === 'student') return <StudentDashboard user={user} setPage={setPage} />;
     if (role === 'admin')   return <AdminStats />;
