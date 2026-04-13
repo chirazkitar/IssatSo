@@ -19,7 +19,7 @@ export default function Sidebar({ user, page, setPage, onLogout, open, onClose }
             <Icon name="mortarboard" size={20} />
           </div>
           <div className="logo-text-wrap">
-            <div className="logo-name">UniPlatform</div>
+            <div className="logo-name">IssatSo Platform</div>
             <div className="logo-sub">Académique</div>
           </div>
         </div>

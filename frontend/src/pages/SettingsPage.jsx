@@ -37,7 +37,7 @@ export default function SettingsPage() {
     <div className="page">
       <div className="page-header fade-up">
         <h2>Paramètres</h2>
-        <p>Personnalisez votre expérience UniPlatform</p>
+        <p>Personnalisez votre expérience IssatSo Platform</p>
       </div>
 
       <div className="grid-2" style={{ alignItems: 'start' }}>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
           </div>
           <div className="card-body">
             {[
-              ['Application',   'UniPlatform v2.0'],
+              ['Application',   'IssatSo Platform v2.0'],
               ['Technologie',   'React · Node.js · PostgreSQL'],
               ['Votre rôle',    getRoleLabel(user.role)],
               ['Email',         user.email],

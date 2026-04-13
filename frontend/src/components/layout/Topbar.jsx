@@ -17,7 +17,7 @@ export default function Topbar({ user, page, onMenuToggle, setPage }) {
         </button>
         <div>
           <div className="topbar-title">{title}</div>
-          <div className="topbar-breadcrumb">UniPlatform › {title}</div>
+          <div className="topbar-breadcrumb">IssatSo Platform › {title}</div>
         </div>
       </div>
 

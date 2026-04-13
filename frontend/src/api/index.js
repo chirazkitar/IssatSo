@@ -66,7 +66,7 @@ export const messagesAPI = {
   return fetch(API_BASE + '/messages/send', {
     method: 'POST',
     headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,        // FormData — ne pas JSON.stringify, pas de Content-Type
+    body: formData,        
   }).then(async res => {
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: 'Erreur réseau' }));

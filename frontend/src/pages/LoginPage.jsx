@@ -41,7 +41,7 @@ export default function LoginPage({ onGoToRegister }) {
         </div>
 
         <div className="login-title">
-          <h1>UniPlatform</h1>
+          <h1>IssatSo Platform</h1>
           <p>Plateforme de Gestion Académique</p>
         </div>
 

@@ -69,6 +69,7 @@ router.get('/me', authenticate, async (req, res) => {
        WHERE u.id = $1`,
       [req.user.id]
     );
+
     if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
     res.json(result.rows[0]);
   } catch (err) {
@@ -101,30 +102,37 @@ router.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(password, salt);
 
     const userRes = await client.query(
-      \`INSERT INTO users (email, password_hash, role, first_name, last_name, phone, status) 
-       VALUES ($1, $2, $3, $4, $5, $6, 'pending') RETURNING id\`,
+      `INSERT INTO users (email, password_hash, role, first_name, last_name, phone, status) 
+       VALUES ($1, $2, $3, $4, $5, $6, 'pending') RETURNING id`,
       [email, hash, role, first_name, last_name, phone]
     );
+
     const userId = userRes.rows[0].id;
 
     if (role === 'student') {
-      const generatedNum = student_number || \`2024/\${Math.random().toString(36).substr(2, 4).toUpperCase()}\`;
+      const generatedNum = student_number || `2024/${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+      
       await client.query(
-        \`INSERT INTO student_profiles (user_id, student_number, program_id, date_of_birth, place_of_birth, enrollment_year, bac_year, bac_mention, address)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\`,
+        `INSERT INTO student_profiles (user_id, student_number, program_id, date_of_birth, place_of_birth, enrollment_year, bac_year, bac_mention, address)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
         [userId, generatedNum, program_id || null, date_of_birth || null, place_of_birth || null, enrollment_year || null, bac_year || null, bac_mention || null, address || null]
       );
+
     } else if (role === 'teacher' || role === 'chef_departement') {
-      const generatedNum = employee_number || \`TEACH-\${Math.random().toString().substr(2, 4)}\`;
+
+      const generatedNum = employee_number || `TEACH-${Math.random().toString().substr(2, 4)}`;
+
       await client.query(
-        \`INSERT INTO teacher_profiles (user_id, employee_number, department_id, specialization, hire_date)
-         VALUES ($1, $2, $3, $4, $5)\`,
+        `INSERT INTO teacher_profiles (user_id, employee_number, department_id, specialization, hire_date)
+         VALUES ($1, $2, $3, $4, $5)`,
         [userId, generatedNum, department_id || null, specialization || null, hire_date || null]
       );
     }
 
     await client.query('COMMIT');
-    res.status(201).json({ message: 'Compte créé avec succès, en attente d\\'approbation.' });
+
+    res.status(201).json({ message: 'Compte créé avec succès, en attente d\'approbation.' });
+
   } catch (err) {
     await client.query('ROLLBACK');
     console.error(err);

@@ -66,7 +66,7 @@ export default function RegisterPage({ onGoToLogin }) {
         <div className="login-logo">🎓</div>
         <div className="login-title">
           <h1>Inscription</h1>
-          <p>Rejoignez UniPlatform</p>
+          <p>Rejoignez IssatSo Platform</p>
         </div>
 
         {error && <div className="alert alert-error">{error}</div>}
