@@ -16,6 +16,12 @@ export default function LoginPage({ onGoToRegister }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    
+    if (!email.trim().toLowerCase().endsWith('@university.tn')) {
+      setError("Seules les adresses se terminant par @university.tn sont autorisées.");
+      return;
+    }
+
     setLoading(true);
     setError('');
     try {

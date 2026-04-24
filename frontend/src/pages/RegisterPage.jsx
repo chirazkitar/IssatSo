@@ -39,6 +39,12 @@ export default function RegisterPage({ onGoToLogin }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    
+    if (!formData.email.trim().toLowerCase().endsWith('@university.tn')) {
+      setError("L'adresse email doit obligatoirement se terminer par @university.tn");
+      return;
+    }
+
     setLoading(true);
     setError('');
     try {
