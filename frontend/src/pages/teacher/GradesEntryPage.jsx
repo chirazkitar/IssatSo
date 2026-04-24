@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { gradesAPI } from '../../api';
+import { gradesAPI, usersAPI, modulesAPI } from '../../api';
 import { useToast } from '../../context/ToastContext';
 import { getMentionFromGrade, calcFinalGrade } from '../../utils/helpers';
 import Loader from '../../components/ui/Loader';
+import Modal from '../../components/ui/Modal';
 import EmptyState from '../../components/ui/EmptyState';
 import Spinner from '../../components/ui/Spinner';
 import { MentionBadge, Chip } from '../../components/ui/Badge';
@@ -17,6 +18,13 @@ export default function GradesEntryPage() {
   const [saving,      setSaving]      = useState({});
   const [savingAll,   setSavingAll]   = useState(false);
   const [search,      setSearch]      = useState('');
+  
+  const [showModal, setShowModal] = useState(false);
+  const [allStudents, setAllStudents] = useState([]);
+  const [allModulesList, setAllModulesList] = useState([]);
+  const [modalData, setModalData] = useState({ student_id: '', module_id: '', ds_grade: '', exam_grade: '' });
+
+
 
   useEffect(() => {
     gradesAPI.teacherStudents().then((data) => {
@@ -74,6 +82,57 @@ export default function GradesEntryPage() {
     setSavingAll(false);
   }
 
+  async function openAddModal() {
+    setShowModal(true);
+    setModalData({ student_id: '', module_id: selected?.module_id || '', ds_grade: '', exam_grade: '' });
+    
+    try {
+      if (!allStudents.length) {
+        const students = await usersAPI.list('student');
+        setAllStudents(students);
+      }
+    } catch (err) {
+      console.error(err);
+      toast('Attention: Impossible de charger tous les étudiants existants (Redémarrez le backend). Affichage des étudiants connus.', 'warn');
+      const loaded = modules.flatMap(m => m.students || []);
+      const unique = Array.from(new Map(loaded.map(s => [s.id, s])).values());
+      setAllStudents(unique);
+    }
+
+    try {
+      if (!allModulesList.length) {
+        const mods = await modulesAPI.list();
+        setAllModulesList(mods);
+      }
+    } catch (err) {
+      console.error(err);
+      toast('Attention: Impossible de charger toutes les matières.', 'warn');
+      setAllModulesList(modules); // Fallback to teacher's modules
+    }
+  }
+
+  async function handleModalSave(e) {
+    e.preventDefault();
+    if (!modalData.student_id) return toast('Sélectionnez un étudiant', 'warn');
+    if (!modalData.module_id) return toast('Sélectionnez une matière', 'warn');
+    if (modalData.ds_grade === '' && modalData.exam_grade === '') return toast('Saisir au moins une note', 'warn');
+    try {
+      const res = await gradesAPI.saveGrade({
+        student_id: modalData.student_id,
+        module_id: modalData.module_id,
+        ds_grade: modalData.ds_grade !== '' ? modalData.ds_grade : null,
+        exam_grade: modalData.exam_grade !== '' ? modalData.exam_grade : null,
+      });
+      toast(`Note ajoutée : ${res.final_grade}/20`, 'success');
+      setShowModal(false);
+      gradesAPI.teacherStudents().then((data) => {
+        setModules(data);
+        const updatedSelected = data.find(m => m.module_id === (selected ? selected.module_id : modalData.module_id));
+        if (updatedSelected) setSelected(updatedSelected);
+      });
+    } catch (err) { toast(err.message, 'error'); }
+  }
+
   const filteredStudents = selected?.students.filter((s) =>
     !search || `${s.first_name} ${s.last_name} ${s.student_number}`.toLowerCase().includes(search.toLowerCase())
   ) || [];
@@ -88,9 +147,14 @@ export default function GradesEntryPage() {
           <h2>Saisie des Notes</h2>
           <p>Finale = DS × 40% + Examen × 60%</p>
         </div>
-        <button className="btn btn-primary" onClick={saveAll} disabled={savingAll || !selected}>
-          {savingAll ? <><Spinner size={14} /> Sauvegarde...</> : <><Icon name="save" size={14} /> Tout enregistrer</>}
-        </button>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button className="btn btn-secondary" onClick={openAddModal} disabled={!selected}>
+            <Icon name="plus" size={14} /> Ajouter notes
+          </button>
+          <button className="btn btn-primary" onClick={saveAll} disabled={savingAll || !selected}>
+            {savingAll ? <><Spinner size={14} /> Sauvegarde...</> : <><Icon name="save" size={14} /> Tout enregistrer</>}
+          </button>
+        </div>
       </div>
 
       <div className="grid-2" style={{ marginBottom:18 }}>
@@ -170,6 +234,56 @@ export default function GradesEntryPage() {
             </table>
           </div>
         </div>
+      )}
+
+      {showModal && (
+        <Modal title="Ajouter / Modifier une note" onClose={() => setShowModal(false)}>
+          <form onSubmit={handleModalSave}>
+            <div className="input-group">
+              <label>Étudiant</label>
+              <select 
+                value={modalData.student_id} 
+                onChange={e => setModalData({...modalData, student_id: e.target.value})}
+                required
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
+              >
+                <option value="">-- Sélectionnez un étudiant --</option>
+                {allStudents.map(st => (
+                  <option key={st.id} value={st.id}>{st.first_name} {st.last_name} ({st.student_number || 'N/A'})</option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group" style={{ marginTop: 12 }}>
+              <label>Matière</label>
+              <select 
+                value={modalData.module_id} 
+                onChange={e => setModalData({...modalData, module_id: e.target.value})}
+                required
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
+              >
+                <option value="">-- Sélectionnez une matière --</option>
+                {allModulesList.map(mod => (
+                  <option key={mod.id || mod.module_id} value={mod.id || mod.module_id}>
+                    {mod.name || mod.module_name} ({mod.code}) {mod.program_name ? `- ${mod.program_name}` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label>DS /20</label>
+                <input type="number" min="0" max="20" step="0.25" value={modalData.ds_grade} onChange={e => setModalData({...modalData, ds_grade: e.target.value})} style={{ width: '100%' }} />
+              </div>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label>Examen /20</label>
+                <input type="number" min="0" max="20" step="0.25" value={modalData.exam_grade} onChange={e => setModalData({...modalData, exam_grade: e.target.value})} style={{ width: '100%' }} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 24 }}>
+              <button type="submit" className="btn btn-primary">Enregistrer</button>
+            </div>
+          </form>
+        </Modal>
       )}
     </div>
   );

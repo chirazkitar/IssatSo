@@ -80,10 +80,10 @@ export function fmtNum(n, def = '—') {
 export const MENTIONS = ['Très Bien', 'Bien', 'Assez Bien', 'Passable', 'Ajourné'];
 
 export const DEMO_ACCOUNTS = [
-  { role: 'Admin',      email: 'admin@university.dz',   pass: 'Admin@2024'   },
-  { role: 'Chef Dép.',  email: 'chef@university.dz',    pass: 'Chef@2024'    },
-  { role: 'Enseignant', email: 'teacher@university.dz', pass: 'Teacher@2024' },
-  { role: 'Étudiant',   email: 'student@university.dz', pass: 'Student@2024' },
+  { role: 'Admin',      email: 'admin@university.tn',   pass: 'Admin@2024'   },
+  { role: 'Chef Dép.',  email: 'chef@university.tn',    pass: 'Chef@2024'    },
+  { role: 'Enseignant', email: 'teacher@university.tn', pass: 'Teacher@2024' },
+  { role: 'Étudiant',   email: 'student@university.tn', pass: 'Student@2024' },
 ];
 
 export const PAGE_TITLES = {

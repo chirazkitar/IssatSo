@@ -102,7 +102,7 @@ export default function RegisterPage({ onGoToLogin }) {
             </div>
             <div className="form-group">
               <label>Email *</label>
-              <input type="email" required value={formData.email} onChange={(e) => set('email', e.target.value)} placeholder="email@university.dz" />
+              <input type="email" required value={formData.email} onChange={(e) => set('email', e.target.value)} placeholder="email@university.tn" />
             </div>
             <div className="form-group">
               <label>Mot de passe *</label>
@@ -110,7 +110,7 @@ export default function RegisterPage({ onGoToLogin }) {
             </div>
             <div className="form-group">
               <label>Téléphone</label>
-              <input value={formData.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+213 XXX XXX XXX" />
+              <input value={formData.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+216 XXX XXX XXX" />
             </div>
           </div>
 
@@ -123,7 +123,7 @@ export default function RegisterPage({ onGoToLogin }) {
               <div className="grid-2">
                 <div className="form-group">
                   <label>N° Étudiant *</label>
-                  <input required value={formData.student_number || ''} onChange={(e) => set('student_number', e.target.value)} placeholder="2024/INFO/001" />
+                  <input required value={formData.student_number || ''} onChange={(e) => set('student_number', e.target.value)} placeholder="2026/INFO/001" />
                 </div>
                 <div className="form-group">
                   <label>Filière *</label>

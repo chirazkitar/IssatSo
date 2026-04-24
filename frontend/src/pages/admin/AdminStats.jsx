@@ -36,7 +36,7 @@ export default function AdminStats() {
     <div className="page">
       <div className="page-header fade-up">
         <h2>Statistiques Académiques</h2>
-        <p>Vue d'ensemble de la plateforme — Année 2024-2025</p>
+        <p>Vue d'ensemble de la plateforme — Année 2025-2026</p>
       </div>
 
       <div className="stats-grid">

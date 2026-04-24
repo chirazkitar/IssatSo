@@ -58,7 +58,7 @@ router.post('/', authenticate, authorize('admin'), async (req, res) => {
 });
 
 
-router.get('/', authenticate, authorize('admin', 'chef_departement'), async (req, res) => {
+router.get('/', authenticate, authorize('admin', 'chef_departement', 'teacher'), async (req, res) => {
   const { role } = req.query;
   try {
     let query = `

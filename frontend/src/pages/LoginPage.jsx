@@ -63,7 +63,7 @@ export default function LoginPage({ onGoToRegister }) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="votre@email.dz"
+                placeholder="votre@email.tn"
                 required
                 autoFocus
                 style={{ paddingLeft: 36 }}
