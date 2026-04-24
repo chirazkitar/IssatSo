@@ -43,7 +43,7 @@ export default function LoginPage({ onGoToRegister }) {
       <div className="login-card">
         {/* Logo */}
         <div className="login-logo-wrap">
-          <Icon name="mortarboard" size={26} />
+          <img src="/favicon.svg" alt="IssatSo Logo" style={{ width: 42, height: 42 }} />
         </div>
 
         <div className="login-title">

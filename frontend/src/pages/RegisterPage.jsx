@@ -69,7 +69,9 @@ export default function RegisterPage({ onGoToLogin }) {
       <div className="login-orb orb3" />
 
       <div className="login-card" style={{ maxWidth: '750px', maxHeight: '90vh', overflowY: 'auto' }}>
-        <div className="login-logo">🎓</div>
+        <div className="login-logo-wrap" style={{ margin: '0 auto 12px', width: 44, height: 44 }}>
+          <img src="/favicon.svg" alt="IssatSo Logo" style={{ width: 36, height: 36 }} />
+        </div>
         <div className="login-title">
           <h1>Inscription</h1>
           <p>Rejoignez IssatSo Platform</p>

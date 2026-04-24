@@ -16,7 +16,7 @@ export default function Sidebar({ user, page, setPage, onLogout, open, onClose }
         {/* ── Logo ── */}
         <div className="sidebar-logo">
           <div className="logo-mark">
-            <Icon name="mortarboard" size={20} />
+            <img src="/favicon.svg" alt="IssatSo Logo" style={{ width: 28, height: 28 }} />
           </div>
           <div className="logo-text-wrap">
             <div className="logo-name">IssatSo Platform</div>

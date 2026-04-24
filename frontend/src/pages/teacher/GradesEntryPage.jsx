@@ -11,14 +11,14 @@ import Icon from '../../components/icons';
 
 export default function GradesEntryPage() {
   const toast = useToast();
-  const [modules,     setModules]     = useState([]);
-  const [selected,    setSelected]    = useState(null);
-  const [loading,     setLoading]     = useState(true);
+  const [modules, setModules] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [localGrades, setLocalGrades] = useState({});
-  const [saving,      setSaving]      = useState({});
-  const [savingAll,   setSavingAll]   = useState(false);
-  const [search,      setSearch]      = useState('');
-  
+  const [saving, setSaving] = useState({});
+  const [savingAll, setSavingAll] = useState(false);
+  const [search, setSearch] = useState('');
+
   const [showModal, setShowModal] = useState(false);
   const [allStudents, setAllStudents] = useState([]);
   const [allModulesList, setAllModulesList] = useState([]);
@@ -55,12 +55,16 @@ export default function GradesEntryPage() {
       });
       toast(`${student.first_name} : ${res.final_grade}/20 — ${res.mention}`, 'success');
       setModules((mods) => mods.map((m) => m.module_id === selected.module_id
-        ? { ...m, students: m.students.map((s) => s.id === student.id
-            ? { ...s, ds_grade: parseFloat(ds)||null, exam_grade: parseFloat(exam)||null, final_grade: parseFloat(res.final_grade), mention: res.mention }
-            : s) }
+        ? {
+          ...m, students: m.students.map((s) => s.id === student.id
+            ? { ...s, ds_grade: parseFloat(ds) || null, exam_grade: parseFloat(exam) || null, final_grade: parseFloat(res.final_grade), mention: res.mention }
+            : s)
+        }
         : m));
-      setSelected((sel) => sel ? { ...sel, students: sel.students.map((s) => s.id === student.id
-        ? { ...s, final_grade: parseFloat(res.final_grade), mention: res.mention } : s) } : sel);
+      setSelected((sel) => sel ? {
+        ...sel, students: sel.students.map((s) => s.id === student.id
+          ? { ...s, final_grade: parseFloat(res.final_grade), mention: res.mention } : s)
+      } : sel);
     } catch (err) { toast(err.message, 'error'); }
     finally { setSaving((s) => ({ ...s, [student.id]: false })); }
   }
@@ -73,12 +77,14 @@ export default function GradesEntryPage() {
       const ds = getLocal(student.id, 'ds'), exam = getLocal(student.id, 'exam');
       if (ds === '' && exam === '') continue;
       try {
-        await gradesAPI.saveGrade({ student_id: student.id, module_id: selected.module_id,
-          ds_grade: ds !== '' ? ds : null, exam_grade: exam !== '' ? exam : null });
+        await gradesAPI.saveGrade({
+          student_id: student.id, module_id: selected.module_id,
+          ds_grade: ds !== '' ? ds : null, exam_grade: exam !== '' ? exam : null
+        });
         saved++;
       } catch { errors++; }
     }
-    toast(`${saved} note${saved!==1?'s':''} enregistrée${saved!==1?'s':''}${errors?` (${errors} erreur${errors!==1?'s':''})` : ''}`, 'success');
+    toast(`${saved} note${saved !== 1 ? 's' : ''} enregistrée${saved !== 1 ? 's' : ''}${errors ? ` (${errors} erreur${errors !== 1 ? 's' : ''})` : ''}`, 'success');
     setSavingAll(false);
   }
 
@@ -93,7 +99,7 @@ export default function GradesEntryPage() {
       }
     } catch (err) {
       console.error(err);
-      toast('Attention: Impossible de charger tous les étudiants existants (Redémarrez le backend). Affichage des étudiants connus.', 'warn');
+      toast("Attention: Affichage des étudiants connus par vos modules (Le backend n'a pas été redémarré)", 'warn');
       const loaded = modules.flatMap(m => m.students || []);
       const unique = Array.from(new Map(loaded.map(s => [s.id, s])).values());
       setAllStudents(unique);
@@ -107,7 +113,7 @@ export default function GradesEntryPage() {
     } catch (err) {
       console.error(err);
       toast('Attention: Impossible de charger toutes les matières.', 'warn');
-      setAllModulesList(modules); // Fallback to teacher's modules
+      setAllModulesList(modules); // Fallback
     }
   }
 
@@ -142,7 +148,7 @@ export default function GradesEntryPage() {
 
   return (
     <div className="page">
-      <div className="page-header fade-up" style={{ display:'flex', justifyContent:'space-between', flexWrap:'wrap', gap:12 }}>
+      <div className="page-header fade-up" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h2>Saisie des Notes</h2>
           <p>Finale = DS × 40% + Examen × 60%</p>
@@ -157,23 +163,23 @@ export default function GradesEntryPage() {
         </div>
       </div>
 
-      <div className="grid-2" style={{ marginBottom:18 }}>
+      <div className="grid-2" style={{ marginBottom: 18 }}>
         {modules.map((m, i) => (
-          <div key={m.module_id} className={`card card-hover fade-up-${(i%4)+1}`} style={{ cursor:'pointer', border: selected?.module_id === m.module_id ? '1.5px solid var(--accent)' : '' }} onClick={() => setSelected(m)}>
-            <div className="card-body" style={{ display:'flex', alignItems:'center', gap:14 }}>
-              <div style={{ width:40, height:40, borderRadius:10, background:'var(--blue-soft)', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--accent2)', flexShrink:0 }}>
+          <div key={m.module_id} className={`card card-hover fade-up-${(i % 4) + 1}`} style={{ cursor: 'pointer', border: selected?.module_id === m.module_id ? '1.5px solid var(--accent)' : '' }} onClick={() => setSelected(m)}>
+            <div className="card-body" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--blue-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent2)', flexShrink: 0 }}>
                 <Icon name="book" size={18} />
               </div>
-              <div style={{ flex:1 }}>
-                <div style={{ fontWeight:700, fontSize:14 }}>{m.module_name}</div>
-                <div style={{ fontSize:12, color:'var(--text3)', marginTop:2 }}>S{m.semester} • Coeff {m.coefficient} • {m.students.length} étudiants</div>
-                <div style={{ display:'flex', gap:6, marginTop:6, flexWrap:'wrap' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: 14 }}>{m.module_name}</div>
+                <div style={{ fontSize: 12, color: 'var(--text3)', marginTop: 2 }}>S{m.semester} • Coeff {m.coefficient} • {m.students.length} étudiants</div>
+                <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
                   <Chip>{m.code}</Chip>
                   <Chip variant="chip-green">{m.students.filter((s) => parseFloat(s.final_grade) >= 10).length} validés</Chip>
                   <Chip>{m.students.filter((s) => s.final_grade !== null).length} notés</Chip>
                 </div>
               </div>
-              {selected?.module_id === m.module_id && <Icon name="check" size={18} style={{ color:'var(--accent)' }} />}
+              {selected?.module_id === m.module_id && <Icon name="check" size={18} style={{ color: 'var(--accent)' }} />}
             </div>
           </div>
         ))}
@@ -182,18 +188,18 @@ export default function GradesEntryPage() {
       {selected && (
         <div className="card fade-up">
           <div className="card-header">
-            <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-              <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-                <Icon name="pencil" size={14} style={{ color:'var(--accent2)' }} /> {selected.module_name}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <Icon name="pencil" size={14} style={{ color: 'var(--accent2)' }} /> {selected.module_name}
               </span>
               <Chip>{selected.students.length} étudiants</Chip>
             </div>
-            <div className="input-wrap" style={{ width:220 }}>
+            <div className="input-wrap" style={{ width: 220 }}>
               <span className="input-icon"><Icon name="search" size={13} /></span>
-              <input placeholder="Rechercher..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ fontSize:12, padding:'7px 10px 7px 32px' }} />
+              <input placeholder="Rechercher..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ fontSize: 12, padding: '7px 10px 7px 32px' }} />
             </div>
           </div>
-          <div className="table-wrap" style={{ border:'none', borderRadius:0 }}>
+          <div className="table-wrap" style={{ border: 'none', borderRadius: 0 }}>
             <table>
               <thead>
                 <tr><th>N° Étudiant</th><th>Nom & Prénom</th><th>DS /20</th><th>Examen /20</th><th>Finale</th><th>Mention</th><th>Enreg.</th></tr>
@@ -207,18 +213,18 @@ export default function GradesEntryPage() {
                   return (
                     <tr key={s.id}>
                       <td><Chip>{s.student_number}</Chip></td>
-                      <td style={{ fontWeight:600 }}>{s.last_name} {s.first_name}</td>
+                      <td style={{ fontWeight: 600 }}>{s.last_name} {s.first_name}</td>
                       <td className="grade-input-cell">
                         <input type="number" min="0" max="20" step="0.25" value={ds} placeholder="DS"
                           onChange={(e) => updateGrade(s.id, 'ds', e.target.value)}
-                          style={{ borderColor: !isNaN(dsN) && (dsN<0||dsN>20) ? 'var(--red)' : '' }} />
+                          style={{ borderColor: !isNaN(dsN) && (dsN < 0 || dsN > 20) ? 'var(--red)' : '' }} />
                       </td>
                       <td className="grade-input-cell">
                         <input type="number" min="0" max="20" step="0.25" value={exam} placeholder="Exam"
                           onChange={(e) => updateGrade(s.id, 'exam', e.target.value)}
-                          style={{ borderColor: !isNaN(exN) && (exN<0||exN>20) ? 'var(--red)' : '' }} />
+                          style={{ borderColor: !isNaN(exN) && (exN < 0 || exN > 20) ? 'var(--red)' : '' }} />
                       </td>
-                      <td style={{ fontWeight:700, color: preview != null ? (parseFloat(preview) >= 10 ? 'var(--green)' : 'var(--red)') : 'var(--text3)' }}>
+                      <td style={{ fontWeight: 700, color: preview != null ? (parseFloat(preview) >= 10 ? 'var(--green)' : 'var(--red)') : 'var(--text3)' }}>
                         {preview != null ? `${preview}/20` : '—'}
                       </td>
                       <td><MentionBadge mention={mentionPreview} /></td>
@@ -241,9 +247,9 @@ export default function GradesEntryPage() {
           <form onSubmit={handleModalSave}>
             <div className="input-group">
               <label>Étudiant</label>
-              <select 
-                value={modalData.student_id} 
-                onChange={e => setModalData({...modalData, student_id: e.target.value})}
+              <select
+                value={modalData.student_id}
+                onChange={e => setModalData({ ...modalData, student_id: e.target.value })}
                 required
                 style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
               >
@@ -272,11 +278,11 @@ export default function GradesEntryPage() {
             <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
               <div className="input-group" style={{ flex: 1 }}>
                 <label>DS /20</label>
-                <input type="number" min="0" max="20" step="0.25" value={modalData.ds_grade} onChange={e => setModalData({...modalData, ds_grade: e.target.value})} style={{ width: '100%' }} />
+                <input type="number" min="0" max="20" step="0.25" value={modalData.ds_grade} onChange={e => setModalData({ ...modalData, ds_grade: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="input-group" style={{ flex: 1 }}>
                 <label>Examen /20</label>
-                <input type="number" min="0" max="20" step="0.25" value={modalData.exam_grade} onChange={e => setModalData({...modalData, exam_grade: e.target.value})} style={{ width: '100%' }} />
+                <input type="number" min="0" max="20" step="0.25" value={modalData.exam_grade} onChange={e => setModalData({ ...modalData, exam_grade: e.target.value })} style={{ width: '100%' }} />
               </div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 24 }}>

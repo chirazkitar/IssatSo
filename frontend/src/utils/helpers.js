@@ -119,7 +119,6 @@ export const NAV_ITEMS_BY_ROLE = {
   admin: [
     { key: 'dashboard',   icon: 'graphUp',   label: 'Statistiques'     },
     { key: 'users-admin', icon: 'people',    label: 'Utilisateurs'     },
-    { key: 'create-user', icon: 'plusCircle',label: 'Créer Compte'     },
     { key: 'messaging',  icon: 'envelope',  label: 'Messagerie'         },
       { key: 'settings',    icon: 'gear',      label: 'Paramètres'       },
   ],
