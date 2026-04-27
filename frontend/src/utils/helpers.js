@@ -118,10 +118,14 @@ export const NAV_ITEMS_BY_ROLE = {
   ],
   admin: [
     { key: 'dashboard',   icon: 'graphUp',   label: 'Statistiques'     },
+        { key: 'profile',      icon: 'person',   label: 'Mon Profil'       },
+
     { key: 'users-admin', icon: 'people',    label: 'Utilisateurs'     },
-    { key: 'create-user', icon: 'plusCircle',label: 'Créer Compte'     },
+    //{ key: 'create-user', icon: 'plusCircle',label: 'Créer Compte'     },
     { key: 'messaging',  icon: 'envelope',  label: 'Messagerie'         },
+          { key: 'diplomes', icon: 'mortarboard', label: 'Validation Diplômes' },
       { key: 'settings',    icon: 'gear',      label: 'Paramètres'       },
+
   ],
   chef_departement: [
     { key: 'dashboard',    icon: 'home',      label: 'Tableau de bord'    },
@@ -133,3 +137,4 @@ export const NAV_ITEMS_BY_ROLE = {
       { key: 'settings',     icon: 'gear',      label: 'Paramètres'         },
   ],
 };
+

@@ -24,6 +24,24 @@ export async function apiFetch(endpoint, options = {}) {
   return res.json();
 }
 
+// ─── helper : fetch-based download with Authorization header ─────────────────
+export async function downloadFile(url, filename) {
+  const token = getToken();
+  try {
+    const res  = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) return;
+    const blob = await res.blob();
+    const href = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = href;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(href);
+  } catch (e) {
+    console.error('Download error', e);
+  }
+}
+
 export const authAPI = {
   login : (email, password) => apiFetch('/auth/login', { method: 'POST', body: { email, password } }),
   me    : ()                => apiFetch('/auth/me'),
@@ -61,20 +79,51 @@ export const messagesAPI = {
   sent        : ()     => apiFetch('/messages/sent'),
   unreadCount : ()     => apiFetch('/messages/unread-count'),
   markRead    : (id)   => apiFetch(`/messages/${id}/read`, { method: 'POST' }),
-  send: (formData) => {
-  const token = getToken();
-  return fetch(API_BASE + '/messages/send', {
-    method: 'POST',
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,        // FormData — ne pas JSON.stringify, pas de Content-Type
-  }).then(async res => {
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ error: 'Erreur réseau' }));
-      throw new Error(err.error || 'Erreur');
-    }
-    return res.json();
-  });
-},
-  attachmentUrl: (id) => `${API_BASE}/messages/attachment/${id}`,
   recipients  : ()     => apiFetch('/messages/recipients'),
+  send: (formData) => {
+    const token = getToken();
+    return fetch(API_BASE + '/messages/send', {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    }).then(async res => {
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Erreur réseau' }));
+        throw new Error(err.error || 'Erreur');
+      }
+      return res.json();
+    });
+  },
+  // Use downloadFile() from this module to download with auth token
+  attachmentUrl: (id) => `${API_BASE}/messages/attachment/${id}`,
+};
+
+export const stagesAPI = {
+  myAttestations   : ()          => apiFetch('/stages/my'),
+  deleteAttestation: (id)        => apiFetch(`/stages/${id}`, { method: 'DELETE' }),
+  diplomeStatus    : ()          => apiFetch('/stages/diplome/status'),
+  allStudents      : ()          => apiFetch('/stages/admin/students'),
+  validerDiplome   : (studentId) => apiFetch(`/stages/admin/valider/${studentId}`, { method: 'POST' }),
+
+  // These return URLs — pass them to downloadFile(url, filename) instead of <a href>
+  downloadAttestation: (id) => `${API_BASE}/stages/download/${id}`,
+  diplomeDownloadUrl : ()   => `${API_BASE}/stages/diplome/download`,
+
+  upload: (file, type) => {
+    const token = getToken();
+    const fd = new FormData();
+    fd.append('attestation', file);
+    fd.append('type', type);
+    return fetch(API_BASE + '/stages/upload', {
+      method: 'POST',
+      headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: fd,
+    }).then(async res => {
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Erreur réseau' }));
+        throw new Error(err.error || 'Erreur');
+      }
+      return res.json();
+    });
+  },
 };
