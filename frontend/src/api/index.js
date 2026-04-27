@@ -79,25 +79,9 @@ export const messagesAPI = {
   sent        : ()     => apiFetch('/messages/sent'),
   unreadCount : ()     => apiFetch('/messages/unread-count'),
   markRead    : (id)   => apiFetch(`/messages/${id}/read`, { method: 'POST' }),
-<<<<<<< HEAD
-  send: (formData) => {
-  const token = getToken();
-  return fetch(API_BASE + '/messages/send', {
-    method: 'POST',
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,        
-  }).then(async res => {
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ error: 'Erreur réseau' }));
-      throw new Error(err.error || 'Erreur');
-    }
-    return res.json();
-  });
-},
-  attachmentUrl: (id) => `${API_BASE}/messages/attachment/${id}`,
-=======
->>>>>>> chiraz
+
   recipients  : ()     => apiFetch('/messages/recipients'),
+
   send: (formData) => {
     const token = getToken();
     return fetch(API_BASE + '/messages/send', {
@@ -112,6 +96,7 @@ export const messagesAPI = {
       return res.json();
     });
   },
+
   // Use downloadFile() from this module to download with auth token
   attachmentUrl: (id) => `${API_BASE}/messages/attachment/${id}`,
 };
