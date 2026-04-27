@@ -12,6 +12,8 @@ import ModulesPage      from '../pages/chef/ModulesPage';
 import ProfilePage      from '../pages/ProfilePage';
 import SettingsPage     from '../pages/SettingsPage';
 import MessagingPage from '../pages/messaging/MessagingPage';
+import DiplomeAdmin from '../pages/admin/DiplomeAdmin';
+
 
 function NotFound() {
   return (
@@ -42,5 +44,7 @@ export default function AppRouter({ page, setPage }) {
   if (page === 'modules' && role === 'chef_departement') return <ModulesPage />;
   if (page === 'users-admin' && (role === 'admin' || role === 'chef_departement')) return <UsersAdmin />;
   if (page === 'create-user' && role === 'admin') return <CreateUser />;
+  if (page === 'diplomes' && role === 'admin') return <DiplomeAdmin />;
+
   return <NotFound />;
 }

@@ -10,6 +10,8 @@ const gradeRoutes = require('./routes/grades');
 const moduleRoutes = require('./routes/modules');
 const statsRoutes    = require('./routes/stats');
 const messageRoutes  = require('./routes/messages');
+const stageRoutes = require('./routes/stages');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,6 +30,8 @@ app.use('/api/grades', gradeRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/stats',    statsRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/stages', stageRoutes);
+
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Academic Platform API running' });
@@ -48,4 +52,7 @@ initializeDB().then(() => {
   process.exit(1);
 });
 
+app.use('/uploads/stages',
+  express.static(path.join(__dirname, 'uploads', 'stages')));
+  
 module.exports = app;

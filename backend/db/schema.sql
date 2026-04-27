@@ -168,3 +168,22 @@ CREATE TABLE IF NOT EXISTS message_attachments (
   size_bytes   INTEGER,
   uploaded_at  TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS stage_attestations (
+  id           SERIAL PRIMARY KEY,
+  student_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type         VARCHAR(20) NOT NULL CHECK (type IN ('ete', 'fin_etude')),
+  filename     VARCHAR(255) NOT NULL,
+  stored_name  VARCHAR(255) NOT NULL,
+  size_bytes   INTEGER,
+  uploaded_at  TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS diplome_validations (
+  id                SERIAL PRIMARY KEY,
+  student_id        INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  validated_by      INTEGER NOT NULL REFERENCES users(id),
+  validated_at      TIMESTAMP DEFAULT NOW(),
+  moyenne_generale  DECIMAL(4,2),
+  status            VARCHAR(20) DEFAULT 'validated'
+);
