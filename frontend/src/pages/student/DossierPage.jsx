@@ -54,7 +54,7 @@ export default function DossierPage() {
         <div className="card fade-up-1">
           <div className="card-header">
             <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-              <Icon name="person" size={14} style={{ color:'var(--accent2)' }} /> Informations Personnelles
+               Informations Personnelles
             </span>
           </div>
           <div className="card-body">
@@ -70,7 +70,7 @@ export default function DossierPage() {
         <div className="card fade-up-2">
           <div className="card-header">
             <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-              <Icon name="mortarboard" size={14} style={{ color:'var(--gold)' }} /> Parcours Académique
+              Parcours Académique
             </span>
           </div>
           <div className="card-body">
@@ -99,7 +99,6 @@ export default function DossierPage() {
         return (
           <div key={sem} className="card fade-up" style={{ marginBottom:16 }}>
             <div className="sem-header">
-              <Icon name="book" size={14} style={{ color:'var(--accent2)' }} />
               <h4>Semestre {sem}</h4>
               {avg && <span style={{ fontSize:12, color:'var(--text3)' }}>Moy. pond. :</span>}
               {avg && <span className="sem-avg">{avg}/20</span>}

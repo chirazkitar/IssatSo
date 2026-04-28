@@ -52,7 +52,7 @@ export default function AdminStats() {
         <div className="card fade-up">
           <div className="card-header">
             <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-              <Icon name="barChart" size={14} style={{ color:'var(--accent2)' }} /> Répartition des Mentions
+               Répartition des Mentions
             </span>
           </div>
           <div className="card-body">
@@ -76,7 +76,7 @@ export default function AdminStats() {
         <div className="card fade-up">
           <div className="card-header">
             <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-              <Icon name="graphUp" size={14} style={{ color:'var(--green)' }} /> Synthèse Visuelle
+               Synthèse Visuelle
             </span>
           </div>
           <div className="card-body">
@@ -108,7 +108,7 @@ export default function AdminStats() {
         <div className="card fade-up">
           <div className="card-header">
             <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-              <Icon name="trophy" size={14} style={{ color:'var(--gold)' }} /> Performance par Module
+               Performance par Module
             </span>
           </div>
           <div style={{ padding:0 }}>
@@ -133,7 +133,7 @@ export default function AdminStats() {
         <div className="card fade-up">
           <div className="card-header">
             <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-              <Icon name="people" size={14} style={{ color:'var(--accent2)' }} /> Derniers Inscrits
+               Derniers Inscrits
             </span>
           </div>
           <div style={{ padding:0 }}>

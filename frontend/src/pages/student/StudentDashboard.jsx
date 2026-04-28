@@ -46,7 +46,7 @@ export default function StudentDashboard({ user, setPage }) {
         <div className="card fade-up-2">
           <div className="card-header">
             <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-              <Icon name="graphUp" size={14} style={{ color:'var(--accent2)' }} /> Performance Globale
+               Performance Globale
             </span>
           </div>
           <div className="card-body">
@@ -71,7 +71,7 @@ export default function StudentDashboard({ user, setPage }) {
         <div className="card fade-up-3">
           <div className="card-header">
             <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-              <Icon name="clipboardData" size={14} style={{ color:'var(--gold)' }} /> Dernières Notes
+               Dernières Notes
             </span>
             <button className="btn btn-ghost btn-sm" onClick={() => setPage('grades')}>Voir tout</button>
           </div>
@@ -99,7 +99,7 @@ export default function StudentDashboard({ user, setPage }) {
       <div className="card fade-up-4">
         <div className="card-header">
           <span className="card-title" style={{ display:'flex', alignItems:'center', gap:7 }}>
-            <Icon name="awardFill" size={14} style={{ color:'var(--gold)' }} /> Répartition des Mentions
+             Répartition des Mentions
           </span>
         </div>
         <div className="card-body">

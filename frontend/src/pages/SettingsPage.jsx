@@ -16,11 +16,11 @@ import PasswordModal from '../components/ui/PasswordModal';
 
 const LANGUAGES = [
 
-  { value: 'fr', label: '🇩🇿 Français' },
+  { value: 'fr', label: 'Français' },
 
-  { value: 'ar', label: '🇩🇿 العربية'  },
+  { value: 'ar', label: 'العربية'  },
 
-  { value: 'en', label: '🇬🇧 English'   },
+  { value: 'en', label: 'English'   },
 
 ];
 
@@ -84,7 +84,7 @@ export default function SettingsPage() {
 
           <div className="card-header">
 
-            <span className="card-title">🎨 Apparence</span>
+            <span className="card-title">Apparence</span>
 
           </div>
 
@@ -106,7 +106,7 @@ export default function SettingsPage() {
 
                 onToggle={toggle}
 
-                label={theme === 'dark' ? '🌙 Sombre' : '☀️ Clair'}
+                label={theme === 'dark' ? 'Sombre' : 'Clair'}
 
               />
 
@@ -156,7 +156,7 @@ export default function SettingsPage() {
 
           <div className="card-header">
 
-            <span className="card-title">🔔 Notifications</span>
+            <span className="card-title">Notifications</span>
 
           </div>
 
@@ -224,7 +224,7 @@ export default function SettingsPage() {
 
           <div className="card-header">
 
-            <span className="card-title">🔐 Sécurité</span>
+            <span className="card-title">Sécurité</span>
 
           </div>
 
@@ -242,7 +242,7 @@ export default function SettingsPage() {
 
               <button className="btn btn-ghost" onClick={() => setShowPwd(true)}>
 
-                🔑 Changer
+                Changer
 
               </button>
 
@@ -260,7 +260,7 @@ export default function SettingsPage() {
 
               <button className="btn btn-danger" onClick={logout}>
 
-                ⎋ Déconnexion
+                Déconnexion
 
               </button>
 
@@ -278,7 +278,7 @@ export default function SettingsPage() {
 
           <div className="card-header">
 
-            <span className="card-title">ℹ️ À propos</span>
+            <span className="card-title">À propos</span>
 
           </div>
 
