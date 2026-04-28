@@ -36,10 +36,10 @@ export default function StudentDashboard({ user, setPage }) {
       </div>
 
       <div className="stats-grid">
-        <StatCard iconName="barChart"   value={avg ?? '—'}       label="Moyenne Générale" color="var(--accent2)" colorSoft="var(--blue-soft)"  animClass="fade-up-1" />
-        <StatCard iconName="checkCircle" value={passed}           label="Modules Validés"  color="var(--green)"  colorSoft="var(--green-soft)" animClass="fade-up-2" />
-        <StatCard iconName="xCircle"     value={failed}           label="À Rattraper"      color="var(--red)"    colorSoft="var(--red-soft)"   animClass="fade-up-3" />
-        <StatCard iconName="book"        value={grades.length}    label="Total Modules"    color="var(--gold)"   colorSoft="var(--gold-soft)"  animClass="fade-up-4" />
+        <StatCard    value={avg ?? '—'}       label="Moyenne Générale"   animClass="fade-up-1" />
+        <StatCard    value={passed}           label="Modules Validés"   animClass="fade-up-2" />
+        <StatCard    value={failed}           label="À Rattraper"       animClass="fade-up-3" />
+        <StatCard    value={grades.length}    label="Total Modules"    animClass="fade-up-4" />
       </div>
 
       <div className="grid-2" style={{ marginBottom: 18 }}>

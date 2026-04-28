@@ -58,7 +58,7 @@ export default function TeacherDashboard({ user, setPage }) {
 
           {user.role === 'chef_departement' ? 'Chef ' : ''}
 
-          {user.first_name} {user.last_name} 👋
+          {user.first_name} {user.last_name} 
 
         </h2>
 
@@ -72,21 +72,19 @@ export default function TeacherDashboard({ user, setPage }) {
 
       <div className="stats-grid">
 
-        <StatCard glyph="📚" value={modules.length}   label="Modules"   color="var(--accent2)" animClass="fade-up-1" />
+        <StatCard  value={modules.length}   label="Modules"    animClass="fade-up-1" />
 
-        <StatCard glyph="👨‍🎓" value={totalStudents}   label="Étudiants"    color="var(--green)"   animClass="fade-up-2" />
+        <StatCard  value={totalStudents}   label="Étudiants"       animClass="fade-up-2" />
 
-        <StatCard glyph="✅" value={totalPassed}      label="Validés"  color="var(--gold)"    animClass="fade-up-3" />
+        <StatCard  value={totalPassed}      label="Validés"    animClass="fade-up-3" />
 
         <StatCard
 
-          glyph="📝"
 
           value={`${totalGraded}/${totalStudents}`}
 
           label="Notes"
 
-          color="var(--teal)"
 
           animClass="fade-up-4"
 

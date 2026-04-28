@@ -40,12 +40,12 @@ export default function AdminStats() {
       </div>
 
       <div className="stats-grid">
-        <StatCard iconName="mortarboard" value={stats.totals.students}        label="Étudiants"       color="var(--green)"   colorSoft="var(--green-soft)" animClass="fade-up-1" />
-        <StatCard iconName="people"      value={stats.totals.teachers}        label="Enseignants"     color="var(--accent2)" colorSoft="var(--blue-soft)"  animClass="fade-up-2" />
-        <StatCard iconName="building"    value={stats.totals.programs}        label="Filières"        color="var(--gold)"    colorSoft="var(--gold-soft)"  animClass="fade-up-3" />
-        <StatCard iconName="barChart"    value={`${stats.gradeStats.avg}/20`} label="Moyenne globale" color="var(--accent3)" colorSoft="rgba(155,92,246,.12)" animClass="fade-up-4" />
-        <StatCard iconName="checkCircle" value={`${passRate}%`}               label="Taux de réussite" color="var(--green)"  colorSoft="var(--green-soft)" animClass="fade-up-5" />
-        <StatCard iconName="xCircle"     value={stats.gradeStats.failed}      label="Échecs"          color="var(--red)"     colorSoft="var(--red-soft)"   animClass="fade-up-5" />
+        <StatCard     value={stats.totals.students}        label="Étudiants"        animClass="fade-up-1" />
+        <StatCard     value={stats.totals.teachers}        label="Enseignants"      animClass="fade-up-2" />
+        <StatCard     value={stats.totals.programs}        label="Filières"         animClass="fade-up-3" />
+        <StatCard     value={`${stats.gradeStats.avg}/20`} label="Moyenne globale"  animClass="fade-up-4" />
+        <StatCard     value={`${passRate}%`}               label="Taux de réussite" animClass="fade-up-5" />
+        <StatCard     value={stats.gradeStats.failed}      label="Échecs"           animClass="fade-up-5" />
       </div>
 
       <div className="grid-2" style={{ marginBottom:18 }}>
